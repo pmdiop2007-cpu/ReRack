@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galerie – ReRack</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="header" id="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo"><div class="logo-icon">♻</div><span>ReRack</span></a>
+      <nav class="nav" id="nav">
+        <a href="index.html"   class="nav-link">Accueil</a>
+        <a href="editeur.html" class="nav-link">Éditeur</a>
+        <a href="galerie.html" class="nav-link active">Galerie</a>
+        <div id="nav-auth"></div>
+      </nav>
+      <button class="menu-btn" id="menu-btn">☰</button>
+    </div>
+    <nav class="mobile-menu" id="mobile-menu">
+      <a href="index.html"   class="nav-link">Accueil</a>
+      <a href="editeur.html" class="nav-link">Éditeur</a>
+      <a href="galerie.html" class="nav-link">Galerie</a>
+      <div id="mobile-auth"></div>
+    </nav>
+  </header>
+
+  <main class="pt-header">
+    <div class="container" style="padding-bottom:4rem">
+
+      <div class="section-head">
+        <h1>Galerie Communautaire</h1>
+        <p>Découvrez des designs inspirants créés par la communauté ReRack.<br>Cliquez sur un projet pour voir les détails et modifier ses dimensions.</p>
+      </div>
+
+      <!-- Filtres -->
+      <div class="filters-bar">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" class="search-input" placeholder="Rechercher des projets..." />
+        </div>
+        <select id="cat-filter">
+          <option value="Tout">Toutes catégories</option>
+          <option value="Table">Table</option>
+          <option value="Chaise">Chaise</option>
+          <option value="Étagère">Étagère</option>
+          <option value="Autre">Autre</option>
+        </select>
+        <select id="sort-filter">
+          <option value="likes">📈 Plus populaires</option>
+          <option value="recent">🕐 Plus récents</option>
+        </select>
+        <div id="results-count" class="results-count"></div>
+      </div>
+
+      <!-- Projets vedettes -->
+      <div id="featured-section">
+        <div class="gallery-section-title"><span>✨</span><h2>Projets Vedettes</h2></div>
+        <div class="gallery-grid" id="featured-grid"></div>
+      </div>
+
+      <!-- Tous les projets -->
+      <div style="margin-top:3rem">
+        <h2 id="all-title" class="gallery-all-title">Tous les Projets</h2>
+        <div class="gallery-grid" id="all-grid"></div>
+        <div id="empty-state" class="empty-state" style="display:none">
+          <div class="empty-icon">🔍</div>
+          <h3>Aucun projet trouvé</h3>
+          <p>Essayez de modifier vos filtres ou votre recherche</p>
+        </div>
+      </div>
+
+      <!-- CTA bas de page -->
+      <div class="gallery-cta">
+        <h2>Prêt à Créer le Vôtre ?</h2>
+        <p>Rejoignez notre communauté et partagez vos designs de meubles durables</p>
+        <a href="editeur.html" class="btn btn-white btn-lg">Ouvrir l'Éditeur</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container text-center">
+      <p>© 2026 ReRack. Construire un avenir durable, un profilé à la fois.</p>
+    </div>
+  </footer>
+
+  <!-- ===== MODAL DÉTAIL PROJET ===== -->
+  <!-- S'ouvre quand on clique sur une card de projet communautaire -->
+  <div class="modal-overlay" id="detail-modal" style="display:none">
+    <div class="modal modal-large project-detail-modal">
+      <div class="modal-header">
+        <h3 id="detail-title">Détails du projet</h3>
+        <button class="modal-close" id="close-detail">✕</button>
+      </div>
+      <div class="modal-body" id="detail-body"></div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="close-detail-2">Fermer</button>
+        <button class="btn btn-primary" id="btn-save-dims">💾 Sauvegarder les dimensions</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+  <script src="galerie.js"></script>
+</body>
+</html>
