@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Éditeur 3D – ReRack</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body class="editor-body">
+
+  <header class="header" id="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">♻</div><span>ReRack</span>
+      </a>
+      <nav class="nav" id="nav">
+        <a href="index.html" class="nav-link">Accueil</a>
+        <a href="editeur.html" class="nav-link active">Éditeur</a>
+        <a href="galerie.html" class="nav-link">Galerie</a>
+        <div id="nav-auth"></div>
+      </nav>
+      <button class="menu-btn" id="menu-btn">☰</button>
+    </div>
+    <nav class="mobile-menu" id="mobile-menu">
+      <a href="index.html" class="nav-link">Accueil</a>
+      <a href="editeur.html" class="nav-link">Éditeur</a>
+      <a href="galerie.html" class="nav-link">Galerie</a>
+      <div id="mobile-auth"></div>
+    </nav>
+  </header>
+
+  <div class="editor-layout">
+
+    <aside class="sidebar-left" id="sidebar-left">
+      <div class="sidebar-scroll">
+        <div class="sidebar-section-title">Profilés disponibles</div>
+        <p class="sidebar-hint">Cliquez pour ajouter au canvas</p>
+        <div id="profile-list" class="profile-list"></div>
+
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-title">Actions</div>
+        <div class="action-btns">
+          <button class="btn btn-outline btn-sm w-full" id="btn-save">💾 Sauvegarder</button>
+          <button class="btn btn-outline btn-sm w-full" id="btn-load">📂 Charger</button>
+          <button class="btn btn-outline btn-sm w-full" id="btn-clear">🗑 Effacer tout</button>
+          <button class="btn btn-outline btn-sm w-full" id="btn-export-json">⬇ Exporter JSON</button>
+        </div>
+
+        <div class="sidebar-divider"></div>
+        <button class="btn btn-success w-full" id="btn-share">📤 Partager à la galerie</button>
+        <button class="btn btn-fiche w-full" id="btn-fiche">📄 Fiche technique ouvrier</button>
+
+        <div class="info-box">
+          <strong>Projet collaboratif</strong><br>École Polytechnique de Thiès × Sunu Plastic Odyssey
+        </div>
+      </div>
+    </aside>
+
+    <main class="canvas-area" id="canvas-area">
+      <div class="canvas-toolbar">
+        <div class="toolbar-left">
+          <span class="editor-title">Éditeur 3D</span>
+          <span class="badge-count" id="profile-count">0 profilés</span>
+          <span class="badge-selected" id="selected-badge" style="display:none;"></span>
+        </div>
+        <div class="toolbar-right">
+          <div class="view-btns" id="view-btns">
+            <button class="view-btn active" data-view="persp" title="Perspective">◈</button>
+            <button class="view-btn" data-view="top"   title="Vue dessus">⊡</button>
+            <button class="view-btn" data-view="front" title="Vue face">▭</button>
+            <button class="view-btn" data-view="side"  title="Vue côté">▯</button>
+          </div>
+          <label class="snap-toggle">
+            <input type="checkbox" id="snap-toggle" checked /><span>Grille</span>
+          </label>
+          <button class="btn btn-sm btn-danger-soft" id="btn-delete-sel" style="display:none;">🗑 Supprimer</button>
+        </div>
+      </div>
+
+      <div id="viewport" class="viewport">
+        <div class="canvas-hint" id="canvas-hint">
+          <div class="hint-icon">🧱</div>
+          <p>Cliquez sur un profilé pour l'ajouter</p>
+          <p class="hint-sub">Glisser pour orbiter · Scroll pour zoomer · Clic sur pièce pour sélectionner</p>
+        </div>
+        <div id="snap-label" class="snap-label" style="display:none;"></div>
+      </div>
+
+      <!-- Mobile bottom bar -->
+      <div class="mobile-bottom-bar">
+        <button class="mbb-btn" id="mbb-profiles">🧱<span>Profilés</span></button>
+        <button class="mbb-btn" id="mbb-props">⚙<span>Propriétés</span></button>
+        <button class="mbb-btn" id="mbb-cost">💰<span>Coût</span></button>
+        <button class="mbb-btn mbb-primary" id="mbb-fiche">📄<span>Fiche</span></button>
+      </div>
+    </main>
+
+    <aside class="sidebar-right" id="sidebar-right">
+      <div class="sidebar-scroll">
+        <div class="sidebar-section-title">Propriétés</div>
+        <div id="properties-panel"><p class="sidebar-hint">Sélectionnez un profilé dans le canvas</p></div>
+
+        <div class="sidebar-divider"></div>
+        <div class="sidebar-section-title">Estimation du projet</div>
+        <div id="cost-panel"><p class="sidebar-hint">Ajoutez des profilés pour voir l'estimation</p></div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Mobile drawer -->
+  <div class="drawer-overlay" id="drawer-overlay"></div>
+  <div class="drawer" id="drawer">
+    <div class="drawer-handle"></div>
+    <div class="drawer-header">
+      <span class="drawer-title" id="drawer-title"></span>
+      <button class="drawer-close" id="drawer-close">✕</button>
+    </div>
+    <div class="drawer-content" id="drawer-content"></div>
+  </div>
+
+  <!-- Share modal -->
+  <div class="modal-overlay" id="share-modal" style="display:none;">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Partager votre création</h3>
+        <button class="modal-close" id="close-share">✕</button>
+      </div>
+      <div class="modal-body">
+        <label>Nom du projet *<input type="text" id="share-name" placeholder="Ex: Table basse moderne" /></label>
+        <label>Description<input type="text" id="share-desc" placeholder="Décrivez votre création..." /></label>
+        <div class="modal-actions">
+          <button class="btn btn-outline" id="cancel-share">Annuler</button>
+          <button class="btn btn-primary" id="confirm-share">Partager</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fiche modal -->
+  <div class="modal-overlay" id="fiche-modal" style="display:none;">
+    <div class="modal modal-large">
+      <div class="modal-header">
+        <h3>📄 Fiche Technique Ouvrier</h3>
+        <button class="modal-close" id="close-fiche">✕</button>
+      </div>
+      <div class="modal-body" id="fiche-content"></div>
+      <div class="modal-footer">
+        <input type="text" id="fiche-ouvrier" placeholder="Nom de l'ouvrier (optionnel)" style="flex:1;min-width:0;" />
+        <button class="btn btn-primary" id="btn-download-fiche">⬇ Télécharger</button>
+        <button class="btn btn-outline" id="btn-print-fiche">🖨 Imprimer</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+  <script src="editeur3d.js"></script>
+</body>
+</html>
